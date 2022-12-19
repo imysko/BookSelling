@@ -47,12 +47,6 @@ public partial class BookSellingContext : DbContext
                 .WithMany(e => e.BooksGenres)
                 .HasForeignKey(e => e.BookId)
                 .HasConstraintName("book_id");
-            
-            entity
-                .HasOne(e => e.Genre)
-                .WithMany(e => e.BooksGenres)
-                .HasForeignKey(e => e.GenreId)
-                .HasConstraintName("genre_id");
         });
         
         modelBuilder.Entity<Book>(entity =>
@@ -71,6 +65,12 @@ public partial class BookSellingContext : DbContext
             entity.Property(e => e.Year)
                 .HasColumnType("numeric(4, 0)")
                 .HasColumnName("year");
+            entity.Property(e => e.Image)
+                .IsUnicode(false)
+                .HasColumnName("image");
+            entity.Property(e => e.Active)
+                .HasColumnType("bit")
+                .HasColumnName("active");
         });
 
         modelBuilder.Entity<Seller>(entity =>

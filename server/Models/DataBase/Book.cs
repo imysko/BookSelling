@@ -14,6 +14,10 @@ public partial class Book
 
     public int StoreCount { get; set; }
     
+    public string Image { get; set; } = null!;
+
+    public bool Active { get; set; }
+    
     public virtual ICollection<BookGenre> BooksGenres { get; set; }
 
     public virtual ICollection<Sale> Sales { get; } = new List<Sale>();
