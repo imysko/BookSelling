@@ -1,8 +1,10 @@
 <script setup>
 import {ref} from 'vue'
+import {useRouter} from 'vue-router'
 import useAuthenticationStore from '@/stores/authenticationStore'
 import LogoutModal from '@/components/Modals/LogoutModal.vue'
 
+const router = useRouter()
 const authStore = useAuthenticationStore()
 
 const logoutModalRef = ref()
@@ -13,6 +15,7 @@ function onLogoutClick() {
 
 async function onLogout() {
   await authStore.logout()
+  await router.push("/")
 }
 </script>
 
@@ -30,8 +33,8 @@ async function onLogout() {
       <b-collapse id="navbar-toggle-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item to="/">Каталог</b-nav-item>
-          <b-nav-item v-if="authStore.checkAuth" to="/sales">Список продаж</b-nav-item>
-          <b-nav-item v-if="authStore.checkAuth" to="/sellers">Продавцы</b-nav-item>
+          <b-nav-item v-if="authStore.canAction('seller') || authStore.canAction('admin')" to="/sales">Список продаж</b-nav-item>
+          <b-nav-item v-if="authStore.canAction('admin')" to="/sellers">Продавцы</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ms-auto">

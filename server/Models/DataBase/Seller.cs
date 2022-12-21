@@ -1,4 +1,6 @@
-﻿namespace server.Models.DataBase;
+﻿using Newtonsoft.Json;
+
+namespace server.Models.DataBase;
 
 public partial class Seller
 {
@@ -14,5 +16,6 @@ public partial class Seller
 
     public bool Active { get; set; } = true;
 
+    [JsonIgnore]
     public virtual ICollection<Sale> Sales { get; } = new List<Sale>();
 }

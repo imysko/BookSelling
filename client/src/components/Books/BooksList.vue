@@ -22,7 +22,7 @@ const bookStore = useBooksStore()
         align="center">
     </b-pagination>
   </div>
-  <div v-else>
+  <div v-else class="d-flex justify-content-center">
     Ничего не найдено!
   </div>
 </template>

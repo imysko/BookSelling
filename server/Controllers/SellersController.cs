@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.Context;
@@ -25,35 +24,39 @@ public class SellersController : ControllerBase
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpGet, AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [HttpGet, Authorize(Roles = "admin, superuser")]
     public async Task<ActionResult<PaginatedList<Seller>>> GetSellers([FromQuery] SellersFilter filter)
     {
         IEnumerable<Seller> sellers = await _context.Sellers.ToListAsync();
 
         sellers = filter.ColumnToSort switch
         {
-            "name" => filter.SortType == "desc" ? sellers.OrderByDescending(b => b.Name) : sellers.OrderBy(b => b.Name),
-            "surname" => filter.SortType == "desc" ? sellers.OrderByDescending(b => b.Surname) : sellers.OrderBy(b => b.Surname),
-            "fname" => filter.SortType == "desc" ? sellers.OrderByDescending(b => b.Fname) : sellers.OrderBy(b => b.Fname),
-            "phone_number" => filter.SortType == "desc" ? sellers.OrderByDescending(b => b.PhoneNumber) : sellers.OrderBy(b => b.PhoneNumber),
+            "name" => filter.SortType == "desc" ? sellers.OrderByDescending(s => s.Name) : sellers.OrderBy(s => s.Name),
+            "surname" => filter.SortType == "desc" ? sellers.OrderByDescending(s => s.Surname) : sellers.OrderBy(s => s.Surname),
+            "fname" => filter.SortType == "desc" ? sellers.OrderByDescending(s => s.Fname) : sellers.OrderBy(s => s.Fname),
+            "phone_number" => filter.SortType == "desc" ? sellers.OrderByDescending(s => s.PhoneNumber) : sellers.OrderBy(s => s.PhoneNumber),
             _ => sellers
         };
 
         sellers = sellers
-            .Where(b => filter.IncludeNotActive || b.Active)
-            .Where(b => filter.Name == null || b.Name.ToLower().Contains(filter.Name.ToLower()))
-            .Where(b => filter.Surname == null || b.Surname.ToLower().Contains(filter.Surname.ToLower()))
-            .Where(b => filter.Fname == null || b.Fname!.ToLower().Contains(filter.Fname.ToLower()))
-            .Where(b => filter.PhoneNumber == null ||
-                        b.PhoneNumber.ToString()!.ToLower().Contains(filter.PhoneNumber.ToLower()));
+            .Where(s => filter.IncludeNotActive || s.Active)
+            .Where(s => filter.Name == null || s.Name.ToLower().Contains(filter.Name.ToLower()))
+            .Where(s => filter.Surname == null || s.Surname.ToLower().Contains(filter.Surname.ToLower()))
+            .Where(s => filter.Fname == null || s.Fname!.ToLower().Contains(filter.Fname.ToLower()))
+            .Where(s => filter.PhoneNumber == null ||
+                        s.PhoneNumber.ToString()!.ToLower().Contains(filter.PhoneNumber.ToLower()));
 
-        var pageSize = _configuration.GetValue("PagesSize:SellerPage", 10);
+        var pageSize = _configuration.GetValue("PagesSize:SellersPage", 10);
         return await PaginatedList<Seller>.Create(sellers, filter.CurrentPage, pageSize);
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [HttpGet("{id}"), AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [HttpGet("{id}"), Authorize(Roles = "admin, superuser")]
     public async Task<ActionResult<Seller>> GetSeller(int id)
     {
         var seller = await _context.Sellers.FindAsync(id);
@@ -149,6 +152,6 @@ public class SellersController : ControllerBase
     
     private bool SellerExists(int id)
     {
-        return (_context.Sellers?.Any(g => g.Id == id)).GetValueOrDefault();
+        return (_context.Sellers?.Any(s => s.Id == id)).GetValueOrDefault();
     }
 }

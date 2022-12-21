@@ -30,7 +30,7 @@ public class BooksController : ControllerBase
     {
         IEnumerable<Book> books = await _context.Books
             .Include(b => b.BooksGenres)
-            .ThenInclude(e => e.Genre)
+            .ThenInclude(bg => bg.Genre)
             .ToListAsync();
         
         decimal yearMin = 0;
@@ -65,7 +65,7 @@ public class BooksController : ControllerBase
                             .Select(bg => bg.Genre.Name)
                             .Any(genre => filter.Genries.Contains(genre)));
         
-        var pageSize = _configuration.GetValue("PagesSize:BookPage", 10);
+        var pageSize = _configuration.GetValue("PagesSize:BooksPage", 10);
         var list = await BooksPaginatedList<Book>.GetPage(books, filter.CurrentPage, pageSize);
 
         list.YearMin = yearMin;
@@ -79,11 +79,11 @@ public class BooksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpGet("{id}"), AllowAnonymous]
-    public async Task<ActionResult<Book>> GetGenre(int id)
+    public async Task<ActionResult<Book>> GetBook(int id)
     {
         var book = await _context.Books
             .Include(b => b.BooksGenres)
-            .ThenInclude(e => e.Genre)
+            .ThenInclude(bg => bg.Genre)
             .FirstOrDefaultAsync(b => b.Id == id);
 
         return book == null ? NotFound() : book;

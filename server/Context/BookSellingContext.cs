@@ -19,7 +19,9 @@ public partial class BookSellingContext : DbContext
     public virtual DbSet<BookGenre> BooksGenries { get; set; } = null!;
     public virtual DbSet<Seller> Sellers { get; set; } = null!;
     public virtual DbSet<Sale> Sales { get; set; } = null!;
-    
+
+    public virtual DbSet<SaleBook> SalesBooks { get; set; } = null!;
+
     public virtual DbSet<User> Users { get; set; } = null!;
     public virtual DbSet<Role> Roles { get; set; } = null!;
     public virtual DbSet<UserRole> UsersRoles { get; set; } = null!;
@@ -100,20 +102,33 @@ public partial class BookSellingContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_SALES");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.BookId).HasColumnName("book_id");
-            entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.Date)
+                .HasColumnType("date")
+                .HasColumnName("date");
             entity.Property(e => e.SellerId).HasColumnName("seller_id");
-            entity.Property(e => e.SoldCount).HasColumnName("sold_count");
 
-            entity.HasOne(d => d.Book).WithMany(p => p.Sales)
-                .HasForeignKey(d => d.BookId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Sales_fk0");
-
-            entity.HasOne(d => d.Seller).WithMany(p => p.Sales)
+            entity.HasOne(d => d.Seller)
+                .WithMany(p => p.Sales)
                 .HasForeignKey(d => d.SellerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Sales_fk1");
+        });
+
+        modelBuilder.Entity<SaleBook>(entity =>
+        {
+            entity.ToTable("Sales_Books");
+
+            entity.HasKey(e => new { e.SaleId, e.BookId });
+            
+            entity
+                .HasOne(e => e.Sale)
+                .WithMany(e => e.SalesBooks)
+                .HasForeignKey(e => e.SaleId)
+                .HasConstraintName("sb_sale_id");
+
+            entity
+                .Property(e => e.SoldCount)
+                .HasColumnName("sold_count");
         });
         
         modelBuilder.Entity<Role>(entity =>
@@ -132,12 +147,15 @@ public partial class BookSellingContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F8874F9F2");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            
             entity.Property(e => e.PasswordHash)
                 .IsUnicode(false)
                 .HasColumnName("password_hash");
+            
             entity.Property(e => e.PasswordKey)
                 .IsUnicode(false)
                 .HasColumnName("password_key");
+            
             entity.Property(e => e.Username)
                 .IsUnicode(false)
                 .HasColumnName("username");

@@ -1,7 +1,7 @@
 <script setup>
 import useSellersStore from '@/stores/sellersStore'
-import {computed, reactive, watch} from "vue";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {reactive} from 'vue'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 const sellersStore = useSellersStore()
 
@@ -58,7 +58,7 @@ async function onResetFilter() {
               v-model="filter.surname"
               type="text"
               class="form-control my-2"
-              placeholder="author">
+              placeholder="surname">
           <label for="floatingInput">Фамилия</label>
         </div>
       </div>
@@ -69,7 +69,7 @@ async function onResetFilter() {
               v-model="filter.fname"
               type="text"
               class="form-control my-2"
-              placeholder="author">
+              placeholder="fname">
           <label for="floatingInput">Отчество</label>
         </div>
       </div>
@@ -80,7 +80,7 @@ async function onResetFilter() {
               v-model="filter.phoneNumber"
               type="number"
               class="form-control my-2"
-              placeholder="author">
+              placeholder="phoneNumber">
           <label for="floatingInput">Номер телефона</label>
         </div>
       </div>

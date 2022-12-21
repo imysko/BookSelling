@@ -21,47 +21,50 @@ function onEditClick(seller) {
 
 <template>
   <b-card
+      no-body
       :title="`${props.seller.name} ${props.seller.surname}`"
       :border-variant="props.seller.active ? 'grey' : 'secondary'"
       class="m-2">
-    <b-card-subtitle>
-      {{ props.seller.fname }}
-    </b-card-subtitle>
+    <b-card-body>
+      <b-card-title>
+        {{ props.seller.name }} {{ props.seller.surname }}
+      </b-card-title>
 
-    <b-card-text>
-      <b>Телефон:</b> {{ props.seller.phoneNumber }} <br />
-    </b-card-text>
+      <b-card-subtitle>
+        {{ props.seller.fname }}
+      </b-card-subtitle>
 
-    <b-card-text v-if="props.seller.active">
-      <b-button variant="outline-success" pill>Активный</b-button>
-    </b-card-text>
-    <b-card-text v-else>
-      <b-button variant="outline-secondary" pill>Отстранён</b-button>
-    </b-card-text>
+      <b-card-text>
+        <b>Телефон:</b> {{ props.seller.phoneNumber }} <br />
+      </b-card-text>
+    </b-card-body>
 
-    <b-button
-        pill
-        variant="outline-warning"
-        class="me-1"
-        @click="onEditClick({ ...props.seller })">
-      <FontAwesomeIcon icon="fas fa-pen" size="sm" />
-    </b-button>
+    <b-card-footer>
+      <b-card-group class="d-flex">
+        <b-button
+            v-if="props.seller.active"
+            variant="outline-success"
+            pill
+            @click="onActiveClick(props.seller, false)">
+          Активный
+        </b-button>
+        <b-button
+            v-else
+            variant="outline-secondary"
+            pill
+            @click="onActiveClick(props.seller, true)">
+          Отстранён
+        </b-button>
 
-    <b-button
-        pill
-        variant="outline-danger"
-        @click="onActiveClick(props.seller, false)"
-        v-if="props.seller.active">
-      <FontAwesomeIcon icon="fas fa-trash" size="sm" />
-    </b-button>
-
-    <b-button
-        pill
-        variant="outline-success"
-        @click="onActiveClick(props.seller, true)"
-        v-else>
-      <FontAwesomeIcon icon="fas fa-rotate-left" size="sm" />
-    </b-button>
+        <b-button
+            pill
+            variant="outline-warning"
+            class="ms-2"
+            @click="onEditClick({ ...props.seller })">
+          <FontAwesomeIcon icon="fas fa-pen"/>
+        </b-button>
+      </b-card-group>
+    </b-card-footer>
   </b-card>
 </template>
 

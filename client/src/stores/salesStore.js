@@ -3,7 +3,7 @@ import {defineStore} from 'pinia'
 import axios from 'axios'
 import _ from 'lodash'
 
-const useSellersStore = defineStore('sellersStore', () => {
+const useSalesStore = defineStore('salesStore', () => {
     const pageInfo = reactive({
         currentPage: 1,
         totalPages: 15,
@@ -13,45 +13,49 @@ const useSellersStore = defineStore('sellersStore', () => {
     })
 
     const filter = reactive({
-        name: {
+        sellerName: {
             value: null,
             type: String
         },
-        surname: {
+        sellerSurname: {
             value: null,
             type: String
         },
-        fname: {
+        minDate: {
             value: null,
             type: String
         },
-        phoneNumber: {
+        maxDate: {
             value: null,
-            type: Number
+            type: String
         },
         currentPage: 1,
-        columnToSort: 'name',
-        sortType: 'asc'
+        columnToSort: 'date',
+        sortType: 'desc'
     })
 
-    const sellers = reactive({
+    const sales = reactive({
         items: [],
         totalCount: 0,
+        minDate: null,
+        maxDate: null
     })
 
     onBeforeMount(async () => {
-        await debouncedFetchSellers()
+        await debouncedFetchSales()
     })
 
-    const debouncedFetchSellers = _.debounce(fetchSellers, 100)
+    const debouncedFetchSales = _.debounce(fetchSales, 200)
 
-    async function fetchSellers() {
-        let response = await axios.get('api/sellers', {
+    async function fetchSales() {
+        let response = await axios.get('api/sales', {
             params: filter
         })
 
-        sellers.items = response.data.items
-        sellers.totalCount = response.data.totalCount
+        sales.items = response.data.items
+        sales.totalCount = response.data.totalCount
+        sales.minDate = new Date(response.data.dateMin).toISOString().split('T')[0]
+        sales.maxDate = new Date(response.data.dateMax).toISOString().split('T')[0]
 
         pageInfo.currentPage = response.data.currentPage
         pageInfo.totalPages = response.data.totalPages
@@ -61,11 +65,11 @@ const useSellersStore = defineStore('sellersStore', () => {
     }
 
     return {
-        debouncedFetchSellers,
+        debouncedFetchSales,
         pageInfo,
         filter,
-        sellers
+        sales
     }
 })
 
-export default useSellersStore
+export default useSalesStore
