@@ -10,7 +10,9 @@ public partial class Seller
 
     public string? Fname { get; set; }
 
-    public decimal? FhoneNumber { get; set; }
+    public decimal? PhoneNumber { get; set; }
+
+    public bool Active { get; set; } = true;
 
     public virtual ICollection<Sale> Sales { get; } = new List<Sale>();
 }

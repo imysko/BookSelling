@@ -78,9 +78,6 @@ public partial class BookSellingContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_SELLERS");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.FhoneNumber)
-                .HasColumnType("numeric(11, 0)")
-                .HasColumnName("fhone_number");
             entity.Property(e => e.Fname)
                 .IsUnicode(false)
                 .HasColumnName("fname");
@@ -90,6 +87,12 @@ public partial class BookSellingContext : DbContext
             entity.Property(e => e.Surname)
                 .IsUnicode(false)
                 .HasColumnName("surname");
+            entity.Property(e => e.PhoneNumber)
+                .HasColumnType("numeric(11, 0)")
+                .HasColumnName("phone_number");
+            entity.Property(e => e.Active)
+                .HasColumnType("bit")
+                .HasColumnName("active");
         });
 
         modelBuilder.Entity<Sale>(entity =>

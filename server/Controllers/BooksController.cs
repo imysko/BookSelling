@@ -78,7 +78,7 @@ public class BooksController : ControllerBase
     
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [HttpGet("{id}")]
+    [HttpGet("{id}"), AllowAnonymous]
     public async Task<ActionResult<Book>> GetGenre(int id)
     {
         var book = await _context.Books
@@ -173,7 +173,7 @@ public class BooksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpPut("{id}/archived"), Authorize(Roles = "editor, superuser")]  
-    public async Task<IActionResult> ArchivedBook(int id)
+    public async Task<IActionResult> ArchivedBook(int id, bool active)
     {
         if (!BookExists(id))
         {
@@ -182,20 +182,20 @@ public class BooksController : ControllerBase
         
         var book = await _context.Books.FindAsync(id);
 
-        book!.Active = false;
+        book!.Active = active;
         
         _context.Entry(book).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
 
-        return Ok("Book was bought");
+        return Ok("Book was changed");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [HttpDelete("{id}"), Authorize(Roles = "editor, superuser")]
+    [HttpDelete("{id}"), Authorize(Roles = "superuser")]
     public async Task<IActionResult> DeleteBook(int id)
     {
         var book = await _context.Books.FindAsync(id);

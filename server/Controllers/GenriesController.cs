@@ -30,7 +30,7 @@ public class GenriesController : ControllerBase
     
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [HttpGet("{id}")]
+    [HttpGet("{id}"), AllowAnonymous]
     public async Task<ActionResult<Genre>> GetGenre(int id)
     {
         var genre = await _context.Genries.FindAsync(id);
@@ -86,7 +86,7 @@ public class GenriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [HttpDelete("{id}"), Authorize(Roles = "editor, superuser")]
+    [HttpDelete("{id}"), Authorize(Roles = "superuser")]
     public async Task<IActionResult> DeleteGenre(int id)
     {
         var genre = await _context.Genries.FindAsync(id);

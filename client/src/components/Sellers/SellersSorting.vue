@@ -1,7 +1,7 @@
 <script setup>
-import useBooksStore from '@/stores/booksStore'
+import useSellersStore from '@/stores/sellersStore'
 
-const booksStore = useBooksStore()
+const sellersStore = useSellersStore()
 
 const sortType = [
   { text: 'По возрастанию', value: 'asc' },
@@ -9,10 +9,10 @@ const sortType = [
 ]
 
 const sortColumn = [
-  { text: 'По наименованию', value: 'name' },
-  { text: 'По автору', value: 'author' },
-  { text: 'По году', value: 'year' },
-  { text: 'По цене', value: 'price' },
+  { text: 'По имени', value: 'name' },
+  { text: 'По фамилии', value: 'surname' },
+  { text: 'По отчеству', value: 'fname' },
+  { text: 'По номеру телефона', value: 'phone_number' },
 ]
 </script>
 
@@ -20,27 +20,27 @@ const sortColumn = [
   <b-container class="d-flex">
     <b-col class="d-flex align-items-center">
       <div class="me-2">Сортировать:</div>
-      <b-dropdown variant="warning" :text="sortColumn.find(s => s.value === booksStore.filter.columnToSort).text">
+      <b-dropdown variant="warning" :text="sortColumn.find(s => s.value === sellersStore.filter.columnToSort).text">
         <b-form-radio-group
             class="ps-2"
-            style="width: 190px"
-            v-model="booksStore.filter.columnToSort"
+            style="width: 205px"
+            v-model="sellersStore.filter.columnToSort"
             :options="sortColumn"
             stacked
-            @change="booksStore.debouncedFetchBooks">
+            @change="sellersStore.debouncedFetchSellers">
         </b-form-radio-group>
       </b-dropdown>
     </b-col>
     <b-col class="d-flex align-items-center">
       <div class="me-2">Тип сортировки:</div>
-      <b-dropdown variant="warning" :text="sortType.find(s => s.value === booksStore.filter.sortType).text">
+      <b-dropdown variant="warning" :text="sortType.find(s => s.value === sellersStore.filter.sortType).text">
         <b-form-radio-group
             class="ps-2"
             style="width: 170px"
-            v-model="booksStore.filter.sortType"
+            v-model="sellersStore.filter.sortType"
             :options="sortType"
             stacked
-            @change="booksStore.debouncedFetchBooks">
+            @change="sellersStore.debouncedFetchSellers">
         </b-form-radio-group>
       </b-dropdown>
     </b-col>

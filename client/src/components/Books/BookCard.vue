@@ -1,5 +1,6 @@
 <script setup>
 import useAuthenticationStore from '@/stores/authenticationStore'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {computed, ref} from 'vue'
 
 const props = defineProps({
@@ -13,10 +14,10 @@ const formatGenries = computed(() => {
 })
 
 const authStore = useAuthenticationStore()
-const emit = defineEmits(['delete-book-click', 'edit-book-click'])
+const emit = defineEmits(['active-book-click', 'edit-book-click'])
 
-function onDeleteClick(book) {
-  emit("delete-book-click", book)
+function onActiveClick(book, active) {
+  emit("active-book-click", book, active)
 }
 
 function onEditClick(book) {
@@ -30,7 +31,7 @@ function onEditClick(book) {
         no-body
         tag="article"
         style="width: 220px"
-        border-variant="grey"
+        :border-variant="props.book.active ? 'grey' : 'secondary'"
         class="m-2">
 
       <b-card-img
@@ -72,8 +73,15 @@ function onEditClick(book) {
         </div>
 
         <div v-if="authStore.canAction('editor')" class="d-flex justify-content-end">
-          <b-button pill class="fas fa-pen me-2" variant="outline-warning" @click="onEditClick({...props.book})"/>
-          <b-button pill class="fas fa-trash" variant="outline-danger" @click="onDeleteClick(props.book)"/>
+          <b-button pill class="me-2" variant="outline-warning" @click="onEditClick({...props.book})">
+            <FontAwesomeIcon icon="fas fa-pen me-2" size="sm" />
+          </b-button>
+          <b-button v-if="props.book.active" pill variant="outline-danger" @click="onActiveClick(props.book, false)">
+            <FontAwesomeIcon icon="fas fa-trash" size="sm" />
+          </b-button>
+          <b-button v-else pill variant="outline-success" @click="onActiveClick(props.book, true)">
+            <FontAwesomeIcon icon="fas fa-rotate-left" size="sm" />
+          </b-button>
         </div>
       </b-card-footer>
     </b-card>

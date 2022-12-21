@@ -16,7 +16,7 @@ public partial class Book
     
     public string Image { get; set; } = null!;
 
-    public bool Active { get; set; }
+    public bool Active { get; set; } = true;
     
     public virtual ICollection<BookGenre> BooksGenres { get; set; }
 

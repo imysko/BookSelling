@@ -3,7 +3,6 @@ import BookCard from '@/components/Books/BookCard.vue'
 import useBooksStore from '@/stores/booksStore'
 
 const bookStore = useBooksStore()
-
 </script>
 
 <template>
@@ -26,7 +25,6 @@ const bookStore = useBooksStore()
   <div v-else>
     Ничего не найдено!
   </div>
-
 </template>
 
 <style scoped>

@@ -1,10 +1,8 @@
 <script setup>
-import useAuthenticationStore from '@/stores/booksStore'
 import useBooksStore from '@/stores/booksStore'
 import {computed, reactive, watch} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
-const authStore = useAuthenticationStore()
 const booksStore = useBooksStore()
 
 const filter = reactive({
@@ -47,8 +45,10 @@ async function onApplyFilter() {
   booksStore.filter.yearMax = filter.yearMax
   booksStore.filter.priceMin = filter.priceMin
   booksStore.filter.priceMax = filter.priceMax
-  //booksStore.filter.genries = filter.genries
+  booksStore.filter.genries = filter.genries
   booksStore.filter.includeNotActive = filter.includeNotActive
+
+  booksStore.filter.currentPage = 1
 
   await booksStore.debouncedFetchBooks()
 }

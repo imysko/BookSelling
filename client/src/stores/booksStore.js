@@ -2,7 +2,6 @@ import {onBeforeMount, reactive} from 'vue'
 import {defineStore} from 'pinia'
 import axios from 'axios'
 import _ from 'lodash'
-import qs from 'qs'
 
 const useBooksStore = defineStore('booksStore', () => {
     const pageInfo = reactive({
@@ -63,7 +62,7 @@ const useBooksStore = defineStore('booksStore', () => {
         await debouncedFetchBooks()
     })
 
-    const debouncedFetchBooks = _.debounce(fetchBooks, 200)
+    const debouncedFetchBooks = _.debounce(fetchBooks, 100)
 
     async function fetchBooks() {
         let response = await axios.get('api/books', {

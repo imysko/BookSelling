@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import axios from 'axios'
+import qs from 'qs'
 import BootstrapVue from 'bootstrap-vue-3'
 
 import { FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
@@ -14,6 +16,12 @@ import App from './App.vue'
 import router from './router'
 
 library.add(fas)
+
+axios.defaults.paramsSerializer = {
+    serialize(params) {
+        return qs.stringify(params, { arrayFormat: 'repeat'})
+    }
+}
 
 const app = createApp(App)
 
