@@ -1,5 +1,5 @@
 <script setup>
-import BookCard from '@/components/Books/BookCard.vue'
+import BookCard from '@/components/Cards/BookCard.vue'
 import useBooksStore from '@/stores/booksStore'
 
 const bookStore = useBooksStore()

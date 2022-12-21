@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.Context;
@@ -112,8 +113,8 @@ public class SellersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [HttpPut("{id}/archived"), Authorize(Roles = "admin, superuser")]  
-    public async Task<IActionResult> ArchivedSeller(int id, bool active)
+    [HttpPut("{id}/status"), Authorize(Roles = "admin, superuser")]  
+    public async Task<IActionResult> ChangeStatusSeller(int id, [FromQuery] bool active)
     {
         if (!SellerExists(id))
         {

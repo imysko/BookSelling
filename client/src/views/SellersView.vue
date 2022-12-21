@@ -1,7 +1,7 @@
 <script setup>
-import SellersFilter from '@/components/Sellers/SellersFilter.vue'
-import SellersSorting from '@/components/Sellers/SellersSorting.vue'
-import SellersList from '@/components/Sellers/SellersList.vue'
+import SellersFilter from '@/components/Filters/SellersFilter.vue'
+import SellersSorting from '@/components/Sortings/SellersSorting.vue'
+import SellersList from '@/components/Lists/SellersList.vue'
 </script>
 
 <template>

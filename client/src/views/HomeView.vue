@@ -1,7 +1,7 @@
 <script setup>
-import BooksFilter from '@/components/Books/BooksFilter.vue'
-import BooksSorting from '@/components/Books/BooksSorting.vue'
-import BooksList from '@/components/Books/BooksList.vue'
+import BooksFilter from '@/components/Filters/BooksFilter.vue'
+import BooksSorting from '@/components/Sortings/BooksSorting.vue'
+import BooksList from '@/components/Lists/BooksList.vue'
 </script>
 
 <template>

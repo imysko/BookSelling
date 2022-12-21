@@ -39,6 +39,14 @@ const useSellersStore = defineStore('sellersStore', () => {
         totalCount: 0,
     })
 
+    const sellerStatus = reactive({
+        id: Number,
+        active: {
+            value: true,
+            type: Boolean
+        }
+    })
+
     onBeforeMount(async () => {
         await debouncedFetchSellers()
     })
@@ -60,11 +68,21 @@ const useSellersStore = defineStore('sellersStore', () => {
         pageInfo.hasNextPage = response.data.hasNextPage
     }
 
+    async function changeStatus() {
+        let response = await axios.put(
+            `api/sellers/${sellerStatus.id}/status`, {
+                active: sellerStatus.active
+            }
+        )
+    }
+
     return {
         debouncedFetchSellers,
+        changeStatus,
         pageInfo,
         filter,
-        sellers
+        sellers,
+        sellerStatus
     }
 })
 

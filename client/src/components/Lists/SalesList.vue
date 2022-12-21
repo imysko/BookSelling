@@ -1,5 +1,5 @@
 <script setup>
-import SaleCard from '@/components/Sales/SaleCard.vue'
+import SaleCard from '@/components/Cards/SaleCard.vue'
 import useSalesStore from '@/stores/salesStore'
 
 const salesStore = useSalesStore()
