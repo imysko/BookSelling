@@ -4,11 +4,11 @@ public partial class Sale
 {
     public int Id { get; set; }
 
-    public int SellerId { get; set; }
+    public int? SellerId { get; set; }
 
     public DateTime Date { get; set; }
 
-    public virtual Seller Seller { get; set; } = null!;
+    public virtual Seller? Seller { get; set; }
     
-    public virtual ICollection<SaleBook> SalesBooks { get; set; }
+    public virtual ICollection<SaleBook>? SalesBooks { get; set; }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.Context;
+using server.Models;
 using server.Models.DataBase;
 using server.Models.Filters;
 using server.Models.PaginatedList;
@@ -32,7 +33,7 @@ public class SalesController : ControllerBase
         IEnumerable<Sale> sales = await _context.Sales
             .IgnoreAutoIncludes()
             .Include(s => s.Seller)
-            .Include(s => s.SalesBooks)
+            .Include(s => s.SalesBooks)!
             .ThenInclude(sb => sb.Book)
             .ToListAsync();
         
@@ -78,10 +79,72 @@ public class SalesController : ControllerBase
     {
         var sales = await _context.Sales
             .Include(s => s.Seller)
-            .Include(s => s.SalesBooks)
+            .Include(s => s.SalesBooks)!
             .ThenInclude(sb => sb.Book)
             .FirstOrDefaultAsync(s => s.Id == id);
 
         return sales == null ? NotFound() : sales;
+    }
+    
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [HttpPost, Authorize(Roles = "user, seller, superuser")]
+    public async Task<IActionResult> PostSale(SaleViewModel viewModel)
+    {
+        var book = await _context.Books.FindAsync(viewModel.BookId);
+        
+        if (book == null)
+        {
+            return NotFound("Book not found");
+        }
+
+        var saleBook = new SaleBook
+        {
+            Sale = viewModel.Sale,
+            BookId = viewModel.BookId,
+            SoldCount = viewModel.SoldCount
+        };
+
+        viewModel.Sale.SalesBooks = new List<SaleBook>();
+        viewModel.Sale.SalesBooks.Add(saleBook);
+        
+        _context.Sales.Add(viewModel.Sale);
+        await _context.SaveChangesAsync();
+
+        return StatusCode(201, "Sale was created");
+    }
+    
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [HttpPut("{id}"), Authorize(Roles = "admin, superuser")]
+    public async Task<IActionResult> ConfirmSale(int id, int sellerId)
+    {
+        var sale = await _context.Sales.FindAsync(id);
+        if (sale == null)
+        {
+            return NotFound("Sale not found");
+        }
+        if (sale.SellerId != null)
+        {
+            return Conflict("Sale already confirmed");
+        }
+        
+        var seller = await _context.Sellers.FindAsync(sellerId);
+        if (seller == null)
+        {
+            return NotFound("Seller not found");
+        }
+        
+        sale.SellerId = sellerId;
+        
+        _context.Entry(sale).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+
+        return StatusCode(201, "Sale was confirmed");
     }
 }

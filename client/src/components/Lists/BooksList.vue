@@ -17,16 +17,16 @@ async function editBook(book) {
   bookStore.book.id = book.id
   bookStore.book.data = book
 
-  //bookStore.book.id = book.id
-  //bookStore.book.name = book.name
-  //bookStore.book.author = book.author
-  //bookStore.book.year = book.year
-  //bookStore.book.price = book.price
-  //bookStore.book.storeCount = book.storeCount
-
-  // console.log(bookStore.book.value)
-
   await bookStore.changeBook()
+  await bookStore.debouncedFetchBooks()
+}
+
+async function onBuyClick(bookId, count) {
+  bookStore.buy.bookId = bookId
+  bookStore.buy.soldCount = count
+  bookStore.buy.date = new Date().toISOString()
+
+  await bookStore.buyBook()
   await bookStore.debouncedFetchBooks()
 }
 </script>
@@ -38,6 +38,7 @@ async function editBook(book) {
     <b-card-group>
       <BookCard
           @edit-book-click="onEditClick"
+          @buy-book-click="onBuyClick"
           v-for="book in bookStore.books.items"
           :book="book"/>
     </b-card-group>

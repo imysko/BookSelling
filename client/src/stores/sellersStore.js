@@ -81,11 +81,7 @@ const useSellersStore = defineStore('sellersStore', () => {
     }
 
     async function changeStatus() {
-        let response = await axios.put(
-            `api/sellers/${sellerStatus.id}/status`, {
-                active: sellerStatus.active
-            }
-        )
+        let response = await axios.put(`api/sellers/${sellerStatus.id}/status?active=${sellerStatus.active}`)
     }
 
     return {

@@ -1,13 +1,17 @@
 <script setup>
 import SaleCard from '@/components/Cards/SaleCard.vue'
 import useSalesStore from '@/stores/salesStore'
+import useSellersStore from '@/stores/sellersStore'
 
 const salesStore = useSalesStore()
+const sellersStore = useSellersStore()
+
+const sellers = sellersStore.sellers.items.filter(s => s.active)
 </script>
 
 <template>
   <div v-if="salesStore.sales.items.length">
-    <SaleCard v-for="sale in salesStore.sales.items" :sale="sale"/>
+    <SaleCard v-for="sale in salesStore.sales.items" :sale="sale" :sellers="sellers"/>
 
     <b-pagination
         pills

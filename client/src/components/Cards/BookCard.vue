@@ -14,7 +14,7 @@ const formatGenries = computed(() => {
 })
 
 const authStore = useAuthenticationStore()
-const emit = defineEmits(['active-book-click', 'edit-book-click'])
+const emit = defineEmits(['active-book-click', 'edit-book-click', 'buy-book-click'])
 
 function onActiveClick(book, active) {
   emit("active-book-click", book, active)
@@ -22,6 +22,11 @@ function onActiveClick(book, active) {
 
 function onEditClick(book) {
   emit("edit-book-click", book)
+}
+
+function onBuyClick(book) {
+  emit("buy-book-click", book.id, bookCount.value)
+  bookCount.value = 1
 }
 </script>
 
@@ -68,7 +73,7 @@ function onEditClick(book) {
           </div>
           <div v-else class="d-flex justify-content-sm-between">
             <b-form-spin-button v-model="bookCount" min="1" :max="props.book.storeCount" inline/>
-            <b-button pill class="fab fa-shopify" variant="outline-warning" @click="onDeleteClick(props.book)"/>
+            <b-button pill class="fab fa-shopify" variant="outline-warning" @click="onBuyClick(props.book)"/>
           </div>
         </div>
 

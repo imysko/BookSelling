@@ -29,7 +29,7 @@ public class BooksController : ControllerBase
     public async Task<ActionResult<PaginatedList<Book>>> GetBooks([FromQuery] BooksFilter filter)
     {
         IEnumerable<Book> books = await _context.Books
-            .Include(b => b.BooksGenres)
+            .Include(b => b.BooksGenres)!
             .ThenInclude(bg => bg.Genre)
             .ToListAsync();
         
@@ -82,7 +82,7 @@ public class BooksController : ControllerBase
     public async Task<ActionResult<Book>> GetBook(int id)
     {
         var book = await _context.Books
-            .Include(b => b.BooksGenres)
+            .Include(b => b.BooksGenres)!
             .ThenInclude(bg => bg.Genre)
             .FirstOrDefaultAsync(b => b.Id == id);
 
@@ -107,7 +107,7 @@ public class BooksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpPut("{id}/buy"), Authorize(Roles = "user")]
-    public async Task<IActionResult> BuyBook(int id, [Required]int count)
+    public async Task<IActionResult> BuyBook(int id, int count)
     {
         if (!BookExists(id))
         {

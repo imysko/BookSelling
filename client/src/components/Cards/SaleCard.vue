@@ -1,10 +1,19 @@
 <script setup>
-import {computed} from 'vue'
+import {computed, ref} from 'vue'
 import _ from 'lodash'
+import useAuthenticationStore from '@/stores/authenticationStore'
+import useSalesStore from '@/stores/salesStore'
+import axios from "axios";
 
 const props = defineProps({
-  sale: Object
+  sale: Object,
+  sellers: Array
 })
+
+const authenticationStore = useAuthenticationStore()
+const salesStore = useSalesStore()
+
+const sellerId = ref(props.sellers.length ? props.sellers[0].id : Number)
 
 const formatDate = computed(() => {
   let d = new Date(props.sale.date),
@@ -20,21 +29,39 @@ const formatDate = computed(() => {
 const amount = computed(() => {
   return _.sum(props.sale.salesBooks.map(sb => sb.book.price * sb.soldCount))
 })
+
+async function onConfirm() {
+  await axios.put(`api/sales/${props.sale.id}?sellerId=${sellerId.value}`)
+  await salesStore.debouncedFetchSales()
+}
 </script>
 
 <template>
   <b-card
       no-body
-      :title="`${props.sale.seller.name} ${props.sale.seller.surname}`"
       class="m-2">
     <b-card-body>
-      <b-card-title>
-        {{ props.sale.seller.name }} {{ props.sale.seller.surname }}
-      </b-card-title>
+      <div v-if="props.sale.sellerId !== null">
+        <b-card-title>
+          {{ props.sale.seller.name }} {{ props.sale.seller.surname }}
+        </b-card-title>
 
-      <b-card-subtitle>
-        {{ formatDate }}
-      </b-card-subtitle>
+        <b-card-subtitle>
+          {{ formatDate }}
+        </b-card-subtitle>
+      </div>
+      <b-card-title v-else class="d-flex justify-content-sm-between">
+        <div>
+          Продажа не подтверждена
+        </div>
+        <div v-if="authenticationStore.canAction('admin')" class="d-flex flex-row">
+          <select v-model="sellerId" required class="form-select me-4">
+            <option v-for="seller in props.sellers" :value="seller.id">{{ seller.name }} {{ seller.surname }}</option>
+          </select>
+
+          <b-button pill variant="outline-success" @click="onConfirm">Подтвердить</b-button>
+        </div>
+      </b-card-title>
     </b-card-body>
 
     <b-list-group flush>

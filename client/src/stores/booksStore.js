@@ -92,25 +92,35 @@ const useBooksStore = defineStore('booksStore', () => {
         id: Number,
         data: Object
     })
-    // const book = reactive({
-    //     id: null,
-    //     name: null,
-    //     author: null,
-    //     year: null,
-    //     price: null,
-    //     storeCount: null
-    // })
 
     async function changeBook() {
-        console.log(book)
-
         let response = await axios.put(`api/books/${book.id}`, book.data)
+    }
+
+    const buy = reactive({
+        bookId: Number,
+        soldCount: Number,
+        date: Date
+    })
+
+    async function buyBook() {
+        let response = await axios.put(`api/books/${buy.bookId}/buy?count=${buy.soldCount}`)
+
+        response = await axios.post(`api/sales`, {
+            sale: {
+                date: buy.date
+            },
+            bookId: buy.bookId,
+            soldCount: buy.soldCount
+        })
     }
 
     return {
         debouncedFetchBooks,
         changeBook,
+        buyBook,
         book,
+        buy,
         pageInfo,
         filter,
         genries,
