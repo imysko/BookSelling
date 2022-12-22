@@ -68,6 +68,18 @@ const useSellersStore = defineStore('sellersStore', () => {
         pageInfo.hasNextPage = response.data.hasNextPage
     }
 
+    const seller = reactive({
+        id: Number,
+        name: null,
+        surname: null,
+        fname: null,
+        phoneNumber: null
+    })
+
+    async function changeSeller() {
+        let response = await axios.put(`api/sellers/${seller.id}`, seller)
+    }
+
     async function changeStatus() {
         let response = await axios.put(
             `api/sellers/${sellerStatus.id}/status`, {
@@ -79,10 +91,12 @@ const useSellersStore = defineStore('sellersStore', () => {
     return {
         debouncedFetchSellers,
         changeStatus,
+        changeSeller,
         pageInfo,
         filter,
         sellers,
-        sellerStatus
+        sellerStatus,
+        seller
     }
 })
 

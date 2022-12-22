@@ -14,9 +14,9 @@ public partial class Book
 
     public int StoreCount { get; set; }
     
-    public string Image { get; set; } = null!;
+    public string Image { get; set; } = "https://localhost:7053/media/plug.jpg";
 
     public bool Active { get; set; } = true;
     
-    public virtual ICollection<BookGenre> BooksGenres { get; set; }
+    public virtual ICollection<BookGenre>? BooksGenres { get; set; }
 }

@@ -1,4 +1,4 @@
-import {onBeforeMount, reactive} from 'vue'
+import {onBeforeMount, reactive, ref} from 'vue'
 import {defineStore} from 'pinia'
 import axios from 'axios'
 import _ from 'lodash'
@@ -88,8 +88,29 @@ const useBooksStore = defineStore('booksStore', () => {
         genries.totalCount = response.data.length
     }
 
+    const book = reactive({
+        id: Number,
+        data: Object
+    })
+    // const book = reactive({
+    //     id: null,
+    //     name: null,
+    //     author: null,
+    //     year: null,
+    //     price: null,
+    //     storeCount: null
+    // })
+
+    async function changeBook() {
+        console.log(book)
+
+        let response = await axios.put(`api/books/${book.id}`, book.data)
+    }
+
     return {
         debouncedFetchBooks,
+        changeBook,
+        book,
         pageInfo,
         filter,
         genries,

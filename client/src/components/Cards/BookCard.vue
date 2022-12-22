@@ -35,7 +35,7 @@ function onEditClick(book) {
         class="m-2">
 
       <b-card-img
-          src="https://localhost:7053/media/plug.jpg"
+          :src="props.book.image"
           alt="Image"
           width="200"
           height="300"
